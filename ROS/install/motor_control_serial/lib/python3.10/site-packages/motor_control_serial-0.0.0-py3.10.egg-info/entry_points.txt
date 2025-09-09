@@ -1,3 +1,0 @@
-[console_scripts]
-motor_control_serial_node = motor_control_serial.motor_control_serial_node:main
-
