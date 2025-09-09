@@ -11,6 +11,3 @@ setup.py
 motor_control_serial/__init__.py
 motor_control_serial/motor_control_serial_node.py
 resource/motor_control_serial
-test/test_copyright.py
-test/test_flake8.py
-test/test_pep257.py
