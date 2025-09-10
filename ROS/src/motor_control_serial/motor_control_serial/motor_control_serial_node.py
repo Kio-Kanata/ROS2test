@@ -22,6 +22,7 @@ class commData:
 
 class Serial4wheel4steer(Node):
     def __init__(self):
+        super().__init__('motor_control_serial_node')
         self.pub = self.create_publisher(Float64MultiArray, '/motor/actual_val', 10)
         self.sub = self.create_subscription(Float64MultiArray, '/rover/targets', self.motor_cb, 10)
         self.ser = serial.Serial("/dev/ttyACM0", 115200)
@@ -76,18 +77,19 @@ class Serial4wheel4steer(Node):
         print(self.recvData.wakeUp, self.recvData.wheel.FL, self.recvData.wheel.RL, self.recvData.wheel.RR, self.recvData.wheel.FR, self.recvData.steer.FL, self.recvData.steer.RL, self.recvData.steer.RR, self.recvData.steer.FR)
 
     def setVal(self, msg):
-        self.sendData.wheel.FL[0] = msg.data[1]
-        self.sendData.wheel.RL[0] = msg.data[2]
-        self.sendData.wheel.RR[0] = msg.data[3]
-        self.sendData.wheel.FR[0] = msg.data[4]
-        self.sendData.steer.FL[0] = msg.data[5]
-        self.sendData.steer.RL[0] = msg.data[6]
-        self.sendData.steer.RR[0] = msg.data[7]
-        self.sendData.steer.FR[0] = msg.data[8]
+        self.sendData.wheel.FL[0] = msg.data[0]
+        self.sendData.wheel.RL[0] = msg.data[1]
+        self.sendData.wheel.RR[0] = msg.data[2]
+        self.sendData.wheel.FR[0] = msg.data[3]
+        self.sendData.steer.FL[0] = msg.data[4]
+        self.sendData.steer.RL[0] = msg.data[5]
+        self.sendData.steer.RR[0] = msg.data[6]
+        self.sendData.steer.FR[0] = msg.data[7]
     
     def motor_cb(self, msg):
         self.setVal(msg)
-        pub_data = Float64MultiArray([self.recvData.wheel.FL[0], self.recvData.wheel.RL[0], self.recvData.wheel.RR[0], self.recvData.wheel.FR[0], self.recvData.steer.FL[0], self.recvData.steer.RL[0], self.recvData.steer.RR[0], self.recvData.steer.FR[0]])
+        pub_data = Float64MultiArray()
+        pub_data.data = [self.recvData.wheel.FL[0], self.recvData.wheel.RL[0], self.recvData.wheel.RR[0], self.recvData.wheel.FR[0], self.recvData.steer.FL[0], self.recvData.steer.RL[0], self.recvData.steer.RR[0], self.recvData.steer.FR[0]]
         self.pub.publish(pub_data)
     
     def loop(self):
